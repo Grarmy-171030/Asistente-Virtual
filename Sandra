@@ -1,0 +1,81 @@
+as (70 sloc)  2,88 KB
+   
+/ *
+Programa creado por youtube.com/ElTallerDeTD
+20/2/20
+https://github.com/imTDB
+* /
+
+si  ( annyang )  {
+
+    // Variable para almacenar las voces de nuestro sistema.
+    var  voces ;
+
+    // Inicializamos pronunciar.
+    var  pronuncian  =  nuevo  SpeechSynthesisUtterance ( ) ;
+    pronunciar . tasa  =  1 ;
+    pronunciar . paso  =  0,5 ;
+    pronunciar . lang  =  'es-AR' ;
+
+    // Cargamos las voces que tenemos en nuestro sistema y las mostarmos en un arreglo por consola.
+    ventana . discurso Síntesis . onvoiceschanged  =  function  ( )  {
+        voces  =  ventana . discurso Síntesis . getVoices ( ) ;
+        consola . log ( voces ) ;
+    } ;
+
+    // Definimos los comandos a utilizar.
+    var  comandos  =  {
+        'hola maria' : function  ( )  {
+            pronunciar . text  =  'Hola usuario' ;
+            // Setea la voz que queremos usar en base a nuestra lista.
+            pronunciar . voz  =  voces [ 2 ] ;
+            ventana . discurso Síntesis . hablar ( pronunciar ) ;
+        } ,
+        'como estas' : function  ( )  {
+            pronunciar . text  =  '¡Muy bien!' ;
+            pronunciar . voz  =  voces [ 2 ] ;
+            ventana . discurso Síntesis . hablar ( pronunciar ) ;
+        } ,
+        'hola' : función  ( )  {
+            pronunciar . text  =  'hola, cual es tu nombre?' ;
+            pronunciar . voz  =  voces [ 2 ] ;
+            ventana . discurso Síntesis . hablar ( pronunciar ) ;
+            // Guarda el nombre que le decimos por voz.
+            annyang . addCallback ( 'resultado' ,  función  ( frases )  {
+                // Imprime el nombre por consola.
+                consola . log ( "Nombre:" ,  frases [ 0 ] ) ;
+                // Para el resultado del evento.
+                annyang . removeCallback ( 'resultado' ) ;
+                // Nos dice hola + el nombre que le digamos por voz.
+                pronunciar . texto  =  'Hola,'  +  frases [ 0 ] ;
+                ventana . discurso Síntesis . hablar ( pronunciar ) ;
+            } ) ;
+        } ,
+        // Array que devuelve aleatoriamente un elemento del array, en este caso un chiste.
+        'cuentame un chiste' : function  ( )  {
+            chistes  =  [ 'Por qué las focas del circo miran siempre hacia arriba? Porque es donde están los focos. ' ,
+                'Estas obsesionado con la comida! No se a que te refieres croquetamente. ,
+                'Por que estás hablando con esas zapatillas? Porque pone "conversar" ' ,
+                Buenos dias, me gustaria alquilar "Batman Forever". No es posible, tiene que devolverla tomorrow. '
+            ] ;
+            pronunciar . text  =  chistes [ Math . piso ( Math . random ( )  *  chistes . length ) ]
+            pronunciar . voz  =  voces [ 2 ] ;
+            ventana . discurso Síntesis . hablar ( pronunciar ) ;
+        }
+    } ;
+
+    // Esto nos sirve para ver que escucha el programa en tiempo real.
+    / *
+    annyang.addCallback ('resultado', función (frases) {
+      console.log ("Creo que el usuario dijo:", frases [0]);
+      console.log ("Pero, de nuevo, podría ser cualquiera de los siguientes:", frases);
+       });
+       * /
+
+
+    // Sumamos todos los comandos a annyang.
+    annyang . addCommands ( comandos ) ;
+
+    // Annyang comienza a escuchar.
+    annyang . inicio ( {  reinicio automático : falso ,  continuo : verdadero  } ) ;
+}
